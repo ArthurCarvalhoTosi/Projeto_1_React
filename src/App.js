@@ -4,34 +4,38 @@ import { Component } from 'react';
 
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      name: 'Arthur Tosi',
-    };
-  }
+  state = {
+    name: 'Arthur Tosi',
+    counter: 0,
+  };
 
   handlePClick() {
-    const { name } = this.state;
-    console.log('<p> click ' + { name });
+    this.setState({ name: 'Júnior' });
+  }
+
+  handleAClick = (event) => {
+    event.preventDefault();
+    const { counter } = this.state;
+    this.setState({ counter: counter + 1 });
   }
 
   render() {
-    const { name } = this.state;
+    const { name, counter } = this.state;
     return (
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <p onClick={this.handlePClick}>
-            {name}
+            {name} {counter}
           </p>
           <a
+            onClick={this.handleAClick}
             className="App-link"
             href="https://reactjs.org"
             target="_blank"
             rel="noopener noreferrer"
           >
-            Learn React
+            link
           </a>
         </header>
       </div>
