@@ -5,62 +5,45 @@ import { Component } from 'react';
 
 class App extends Component {
   state = {
-    counter: 0,
-    posts: [
-      {
-        id: 1,
-        title: 'O título 1',
-        body: 'O corpo 1'
-      },
-      {
-        id: 2,
-        title: 'O título 2',
-        body: 'O corpo 2'
-      },
-      {
-        id: 3,
-        title: 'O título 3',
-        body: 'O corpo 3'
-      }
-    ]
+    posts: []
   };
 
-  timeoutUpdate = null;
-
   componentDidMount() {
-    this.handleTimeout();
+    this.loadPosts();
+
   }
 
-  componentDidUpdate() {
-    this.handleTimeout();
-  }
+  loadPosts = async () => {
 
-  componentWillUnmount() {
-    clearTimeout(this.timeoutUpdate);
-  }
+    const postsResponse = await fetch('https://jsonplaceholder.typicode.com/posts');
+    const postsJson = await postsResponse.json();
+    const photosJson = await photosResponse.json();
+    const photosResponse = fetch('https://jsonplaceholder.typicode.com/photos');
 
-  handleTimeout = () => {
-    const { posts, counter } = this.state;
-    posts[0].title = 'O título Mudou';
+    const [posts, photos] = await Promise.all(
+      [postsResponse, photosResponse]
+    );
 
-    this.timeoutUpdate = setTimeout(() => {
-      this.setState({ posts, counter: counter + 1 });
-    }, 2000);
+    this.setState({ posts: postsJson });
   }
 
   render() {
-    const { posts, counter } = this.state;
+    const { posts } = this.state;
 
     return (
-      <div className="App">
-        <h1>{counter}</h1>
-        {posts.map(post => (
-          <div key={post.id}>
-            <h1>{post.title}</h1>
-            <p>{post.body}</p>
-          </div>
-        ))}
-      </div>
+      <section className="container">
+        <div className="posts">
+          {posts.map(post => (
+            <div className="post">
+              <div key={post.id} className="post-content">
+                <h1>{post.title}</h1>
+                <p>{post.body}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
     );
   }
 }
