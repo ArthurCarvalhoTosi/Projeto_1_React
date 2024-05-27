@@ -5,40 +5,45 @@ import { Component } from 'react';
 
 class App extends Component {
   state = {
-    name: 'Arthur Tosi',
-    counter: 0,
+    posts: []
   };
 
-  handlePClick() {
-    this.setState({ name: 'Júnior' });
+  componentDidMount() {
+    this.loadPosts();
+
   }
 
-  handleAClick = (event) => {
-    event.preventDefault();
-    const { counter } = this.state;
-    this.setState({ counter: counter + 1 });
+  loadPosts = async () => {
+
+    const postsResponse = await fetch('https://jsonplaceholder.typicode.com/posts');
+    const postsJson = await postsResponse.json();
+    const photosJson = await photosResponse.json();
+    const photosResponse = fetch('https://jsonplaceholder.typicode.com/photos');
+
+    const [posts, photos] = await Promise.all(
+      [postsResponse, photosResponse]
+    );
+
+    this.setState({ posts: postsJson });
   }
 
   render() {
-    const { name, counter } = this.state;
+    const { posts } = this.state;
+
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p onClick={this.handlePClick}>
-            {name} {counter}
-          </p>
-          <a
-            onClick={this.handleAClick}
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            link
-          </a>
-        </header>
-      </div>
+      <section className="container">
+        <div className="posts">
+          {posts.map(post => (
+            <div className="post">
+              <div key={post.id} className="post-content">
+                <h1>{post.title}</h1>
+                <p>{post.body}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
     );
   }
 }
